@@ -5,29 +5,16 @@ EventSync is a microservice project that collects user interaction events via a 
 
 Overview
 
-+-------------------+          POST/PUT/GET          +-----------------+
-|  Frontend Client  |  <-------------------------->  |  REST API (Node)|
-|  (HTML/Postman)   |                                |                 |
-+-------------------+                                +--------+--------+
-                                                             |
-                                            Validate + Save to MongoDB
-                                                             |
-                                                             v
-                                               +-------------+--------------+
-                                               |         MongoDB            |
-                                               | (Event stored for history) |
-                                               +-------------+--------------+
-                                                             |
-                                       Also publish event to Kafka topic via producer
-                                                             |
-                                                             v
-                                                 +-----------+------------+
-                                                 |     Kafka (Broker)     |
-                                                 | Topic: 'events'        |
-                                                 +-----------+------------+
-                                                      Kafka consumer
-                                                             
-                                           
+SOAPROJECT/
+├── rest-api/           # REST API server (port 3000)
+├── grpc-server/        # gRPC recommendation microservice (port 9000)
+├── graphql-server/     # GraphQL API gateway (port 4000)
+├── consumer/           # Kafka consumer service to collect and store events
+├── interface/          # HTML+JS frontend for testing
+├── service/            # Kafka producer logic
+├── model/              # MongoDB models (Mongoose)
+├── config/             # MongoDB configuration
+├── docker-compose.yml  # Container orchestration (Kafka, Zookeeper, MongoDB)
 
 Features
 
