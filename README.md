@@ -1,59 +1,64 @@
-# SOAProject 
-EventSync
+#EventSync — SOA Microservice Project
+EventSync is a Service-Oriented Architecture (SOA) project designed to collect, store, and process user interaction events. It uses a REST API to receive events, stores them in MongoDB, and publishes them to an Apache Kafka topic for downstream analytics, content recommendation, or real-time processing.
 
-EventSync is a microservice project that collects user interaction events via a RESTful API, stores them in MongoDB, and publishes them to an Apache Kafka topic for downstream processing, analytics, or machine learning-based recommendations.
-
-Overview
+Project Structure
 
 SOAPROJECT/
+
 ├── rest-api/           # REST API server (port 3000)
+
+
 ├── grpc-server/        # gRPC recommendation microservice (port 9000)
+
 ├── graphql-server/     # GraphQL API gateway (port 4000)
+
 ├── consumer/           # Kafka consumer service to collect and store events
-├── interface/          # HTML+JS frontend for testing
+
+├── interface/          # HTML+JS frontend for manual testing
+
 ├── service/            # Kafka producer logic
-├── model/              # MongoDB models (Mongoose)
-├── config/             # MongoDB configuration
-├── docker-compose.yml  # Container orchestration (Kafka, Zookeeper, MongoDB)
 
-Features
+├── model/              # MongoDB Mongoose models
 
-RESTful API for event creation, update, deletion, and querying
+├── config/             # MongoDB configuration file
 
-Input validation and consistent error handling
+├── routes/             # Modular route handlers
 
-MongoDB storage of user events
+├── docker-compose.yml  # Docker setup for Kafka, Zookeeper, and MongoDB
+ Features
+ RESTful API for creating and tracking user events
 
-Kafka-based event publishing for decoupled processing
+ Input validation and error handling
 
-Docker-ready architecture
+ MongoDB storage using Mongoose models
 
-Kafdrop UI for Kafka topic inspection
+ Kafka-based event streaming for scalable processing
 
- Docker & Setup
+ gRPC service for recommendation logic
 
-Run with Docker Compose
+ GraphQL API for unified client queries
 
+ Docker-ready infrastructure
+
+ Kafdrop UI for inspecting Kafka topics
+
+Installation & Setup
+1. Clone the repositor
+git clone https://github.com/AmelJaballah/SOAPROJECT.git
+cd SOAPROJECT
+2. Run the services with Docker Compose
 docker-compose up -d
+Note: Ensure Docker and Docker Compose are installed on your system.
 
-Access Services
+ Access Services
+Service	URL	Description
+REST API	http://localhost:3000	Receives user events
+gRPC Server	grpc://localhost:9000	Handles internal recommendations
+GraphQL Server	http://localhost:4000/graphql	Unified query interface
+Kafdrop UI	http://localhost:9000	Inspect Kafka topics
+MongoDB	mongodb://localhost:27017	Stores all user events
 
-API Server: http://localhost:3000
+👩‍💻 Author
+EventSync
+Created by Amel Jaballah
 
-Kafdrop UI: http://localhost:9000
-
-MongoDB: mongodb://localhost:27017
-
-Notes:
-Ensure MongoDB is running before API requests.
-
-Use Postman or a browser to test REST endpoints.
-
-Kafka topic used: events.
-
-All events are both stored and broadcast for processing.
-
-
-Author
-
-EventSync by Amel Jaballah
