@@ -49,11 +49,15 @@ cd SOAPROJECT
 2. Run the services with Docker Compose
 docker-compose up -d
 Note: Ensure Docker and Docker Compose are installed on your system.
+test POST/GET WITH postman
+[getall](https://github.com/user-attachments/assets/353fb0a8-1ec4-4b0c-ac05-f26ffcbdb383)
+![post](https://github.com/user-attachments/assets/6193334a-151b-4d0e-b8e6-07655f453fd9)
+Access Services()
 
- Access Services
 Service	URL	Description
 REST API	http://localhost:3000	Receives user events
-gRPC Server	grpc://localhost:9000	Handles internal recommendations
+gRPC Server	grpc://localhost:9000	Handles internal recommendations!
+
 GraphQL Server	http://localhost:4000/graphql	Unified query interface
 Kafdrop UI	http://localhost:9000	Inspect Kafka topics
 MongoDB	mongodb://localhost:27017	Stores all user events
