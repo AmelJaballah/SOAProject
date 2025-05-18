@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Microservices API Tester</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { background: #f7f7f9; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; }
+    .container { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); padding: 32px 24px; }
+    h1 { text-align: center; color: #4A90E2; margin-bottom: 24px; }
+    .service-section { margin-bottom: 40px; }
+    .section-title { color: #4A90E2; font-size: 1.1em; font-weight: 600; margin-bottom: 8px; }
+    form, .graphql-form, .grpc-form { display: flex; flex-direction: column; gap: 12px; }
+    label { font-weight: 500; color: #333; }
+    input, select, textarea, button { padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 1em; }
+    button { background: #4A90E2; color: #fff; border: none; cursor: pointer; transition: background 0.2s; font-weight: 600; }
+    button:hover { background: #357ABD; }
+    .response { background: #f0f4f8; border-radius: 8px; padding: 16px; margin-top: 12px; font-family: 'Fira Mono', 'Consolas', monospace; font-size: 0.98em; color: #222; min-height: 32px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Microservices API Tester</h1>
+
+    <!-- REST API Section -->
+    <div class="service-section">
+      <div class="section-title">REST API - Envoyer un événement</div>
+      <form id="eventForm">
+        <label>User ID <input name="user_id" type="text" required></label>
+        <label>Content ID <input name="content_id" type="text" required></label>
+        <label>Catégorie <input name="category" type="text" required></label>
+        <label>Action
+          <select name="action" required>
+            <option value="view">Vue</option>
+            <option value="like">Like</option>
+          </select>
+        </label>
+        <button type="submit">Envoyer l'événement (REST)</button>
+      </form>
+      <div class="response" id="restResponse"></div>
+    </div>
+
+    <!-- GraphQL API Section -->
+    <div class="service-section">
+      <div class="section-title">GraphQL API - Recommandations</div>
+      <form class="graphql-form" id="graphqlForm">
+        <label>User ID <input name="user_id" type="text" required></label>
+        <button type="submit">Obtenir les recommandations (GraphQL)</button>
+      </form>
+      <div class="response" id="graphqlResponse"></div>
+    </div>
+
+    <!-- gRPC API Section (via REST Proxy) -->
+    <div class="service-section">
+      <div class="section-title">gRPC API (via REST Proxy) - Recommandations</div>
+      <form class="grpc-form" id="grpcForm">
+        <label>User ID <input name="user_id" type="text" required></label>
+        <button type="submit">Obtenir les recommandations (gRPC)</button>
+      </form>
+      <div class="response" id="grpcResponse"></div>
+    </div>
+  </div>
+  <script>
+    // REST API Event Sender
+    document.getElementById('eventForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = Object.fromEntries(new FormData(form).entries());
+      const res = await fetch('/event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      document.getElementById('restResponse').textContent = JSON.stringify(result, null, 2);
+    });
+
+    // GraphQL API Tester
+    document.getElementById('graphqlForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user_id = e.target.user_id.value;
+      const query = `
+        query {
+          recommendations(user_id: "${user_id}") {
+            category
+            topContent {
+              content_id
+              score
+            }
+          }
+        }
+      `;
+      const res = await fetch('/graphql', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query })
+      });
+      const result = await res.json();
+      document.getElementById('graphqlResponse').textContent = JSON.stringify(result.data, null, 2);
+    });
+
+    // gRPC API Tester (via REST Proxy)
+    document.getElementById('grpcForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user_id = e.target.user_id.value;
+      // This assumes you have a REST proxy endpoint for gRPC, e.g., /grpc/recommendations
+      const res = await fetch(`/grpc/recommendations?user_id=${encodeURIComponent(user_id)}`);
+      const result = await res.json();
+      document.getElementById('grpcResponse').textContent = JSON.stringify(result, null, 2);
+    });
+  </script>
+</body>
+</html>

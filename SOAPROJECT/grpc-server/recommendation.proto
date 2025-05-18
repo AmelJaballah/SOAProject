@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package recoPackage;
+
+service Reco {
+  rpc GetRecommendations(UserRequest) returns (RecoResponse);
+}
+
+message UserRequest {
+  string user_id = 1;
+}
+
+message Content {
+  string content_id = 1;
+  string category = 2;
+}
+
+message RecoResponse {
+  repeated Content items = 1;
+}
